@@ -6,7 +6,7 @@ interface Article {
   article_link: string;
   article_abstract: string;
   article_content: string;
-  tag: string[];
+  tags: string[];
   score: number;
   created_time: string;
   is_send: boolean;
@@ -14,12 +14,12 @@ interface Article {
 
 // 创建文章
 async function createArticle(article: Omit<Article, 'id' | 'created_time'>): Promise<number | null> {
-  const { title, article_link, article_abstract, article_content, tag, score, is_send } = article;
+  const { title, article_link, article_abstract, article_content, tags, score, is_send } = article;
 
   // 使用 ON CONFLICT 子句处理唯一性冲突
   const result = await pool.query(
-    'INSERT INTO articles (title, article_link, article_abstract, article_content, tag, score, is_send) VALUES ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT (article_link) DO NOTHING RETURNING id',
-    [title, article_link, article_abstract, article_content, tag, score, is_send]
+    'INSERT INTO articles (title, article_link, article_abstract, article_content, tags, score, is_send) VALUES ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT (article_link) DO NOTHING RETURNING id',
+    [title, article_link, article_abstract, article_content, tags, score, is_send]
   );
 
   // 如果插入成功，则返回新插入的记录的 id，否则返回 null
