@@ -1,13 +1,13 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import {SourceList} from "./src/config";
+import {SourceList} from "./config";
 import TurndownService from 'turndown';
 const turndownService = new TurndownService();
-import {filterBlogs, llmFilter} from "./src/filter";
-import {getArticleAbstract} from "./src/abstract";
-import {createArticle, getArticleList} from "./src/database/models/article";
-import {classifyScoresRank} from "./src/rank";
-import {sendAndStoreMessages} from "./src/send";
+import {filterBlogs, llmFilter} from "./service/filter";
+import {getArticleAbstract} from "./service/abstract";
+import {createArticle, getArticleList} from "./database/models/article";
+import {classifyScoresRank} from "./service/rank";
+import {sendAndStoreMessages} from "./service/send";
 
 async function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -113,10 +113,9 @@ async function processContent(demoWebsite: any) {
     // const abstractList = await getArticleList(8);
 
     const rankList = await classifyScoresRank(abstractList);
-    const linkSet = new Set(rankList.map(article => article.article_link)); // 使用 Set 提高查找效率
     // 发送消息&存储
     // console.log(rankList)
-    const sendResult = await sendAndStoreMessages(rankList, abstractList, linkSet)
+    const sendResult = await sendAndStoreMessages(rankList)
     if (sendResult) {
       console.log("success!");
     } else {

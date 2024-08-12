@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getArticleAbstract = getArticleAbstract;
-const llm_1 = require("./llm");
+const llm_1 = require("../llm");
 // 将长文本分割为一个个的相同长度的 chunk
 function splitText(text, length) {
     return Array.from({ length: Math.ceil(text.length / length) }, (_, i) => {

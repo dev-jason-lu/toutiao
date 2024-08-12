@@ -1,5 +1,5 @@
-import {getSendedBlogLinks} from "./database/models/article";
-import {getFilterScore} from "./llm";
+import {getSendedBlogLinks} from "../database/models/article";
+import {getFilterScore} from "../llm";
 
 const CONTNET_LIMIT = 500; // 文章内容过短，有时候也可以判定为是抓取失效得到的一些错误信息，也可以过滤一下
 

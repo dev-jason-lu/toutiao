@@ -1,4 +1,4 @@
-import {llmArticleAbstract} from "./llm";
+import {llmArticleAbstract} from "../llm";
 
 // 将长文本分割为一个个的相同长度的 chunk
 function splitText(text: string, length: number) {

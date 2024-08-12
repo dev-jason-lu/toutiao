@@ -1,5 +1,6 @@
-import {simpleSendGroup} from "./utils/feishu";
-import {createArticle} from "./database/models/article";
+import {simpleSendGroup} from "../utils/feishu";
+import {createArticle} from "../database/models/article";
+import {LIMIT_SEND_COUNT} from "../config";
 
 const colorList = ['blue', 'turquoise', 'lime', 'orange', 'violet', 'indigo', 'wathet', 'green', 'yellow', 'red', 'purple', 'carmine']
 
@@ -112,25 +113,40 @@ async function formatMissionJsonSave(dataList: any[]): Promise<any> {
 
   const sendMessage: SendMissionMessage = {
     content: JSON.stringify(message),
-    receive_id: "oc_40e0a283cf0624bb9a365dcf94bdbbe0", // 替换为实际的 chat_id
+    // receive_id: "oc_40e0a283cf0624bb9a365dcf94bdbbe0",
+    receive_id: "oc_dddeabc7ccbff0504b46d72a51d2920d",
     msg_type: "interactive"
   };
   return await simpleSendGroup(sendMessage);
 }
 
-async function sendAndStoreMessages(rankList: any[], abstractList: any[], linkSet: Set<string>): Promise<boolean> {
+async function sendAndStoreMessages(rankList: any[]): Promise<boolean> {
   try {
-    // 发送消息
-    const sendResult = formatMissionJsonSave(rankList);
-
-    // 内容落库
-    const storePromises = abstractList.map(async (article: any) => {
-      if (linkSet.has(article.article_link)) {
-        return createArticle({ ...article, is_send: true });
+    const storePromises = rankList.map(async (article: any, index: number) => {
+      let id: any;
+      if (index < LIMIT_SEND_COUNT) {
+        id = await createArticle({ ...article, is_send: true });
+      } else {
+        id = await createArticle(article);
       }
-      return createArticle(article);
+      if (index < LIMIT_SEND_COUNT) {
+        rankList[index].id = id;
+      }
+      return id;
     });
 
+    // 使用 Promise.all 来等待所有内容落库操作完成
+    const idList = await Promise.all(storePromises);
+    console.log('idList = ', idList);
+
+    if (idList.length > 0) {
+      console.log("store success!");
+    } else {
+      console.error("store fail!");
+    }
+
+    // 发送消息
+    const sendResult = formatMissionJsonSave(rankList.slice(0, LIMIT_SEND_COUNT));
     // 等待发送消息的结果
     const sendResultValue = await sendResult;
     if (sendResultValue) {
@@ -138,16 +154,7 @@ async function sendAndStoreMessages(rankList: any[], abstractList: any[], linkSe
     } else {
       console.error("send fail!");
     }
-    // 使用 Promise.all 来等待所有内容落库操作完成
-    const idList = await Promise.all(storePromises);
-    console.log('idList = ', idList)
-    const filteredIdList = idList.filter(id => id !== null);
-    if (filteredIdList.length > 0) {
-      console.log("store success!");
-    } else {
-      console.error("store fail!");
-    }
-    return sendResultValue && filteredIdList.length > 0
+    return sendResultValue && idList.length > 0
   } catch (error) {
     console.error("An error occurred:", error);
     return false

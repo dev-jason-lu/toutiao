@@ -2,6 +2,7 @@
 // 定义 SourceList 函数，返回一个 Config 对象数组
 import {Config} from "./typings/config_type";
 
+export const LIMIT_SEND_COUNT = 5
 export const SourceList = (): Config[] => {
     return [
         {

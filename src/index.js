@@ -38,13 +38,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.handler = handler;
 const axios_1 = __importDefault(require("axios"));
 const cheerio = __importStar(require("cheerio"));
-const config_1 = require("./src/config");
+const config_1 = require("./config");
 const turndown_1 = __importDefault(require("turndown"));
 const turndownService = new turndown_1.default();
-const filter_1 = require("./src/filter");
-const abstract_1 = require("./src/abstract");
-const rank_1 = require("./src/rank");
-const send_1 = require("./src/send");
+const filter_1 = require("./service/filter");
+const abstract_1 = require("./service/abstract");
+const rank_1 = require("./service/rank");
+const send_1 = require("./service/send");
 function sleep(ms) {
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise(resolve => setTimeout(resolve, ms));

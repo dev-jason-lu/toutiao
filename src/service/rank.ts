@@ -1,6 +1,5 @@
-import {llmRankArticles} from "./llm";
-
-const LIMIT_SEND_COUNT = 5
+import {llmRankArticles} from "../llm";
+import {LIMIT_SEND_COUNT} from "../config";
 
 async function rankArticles(articleList: any): Promise<any> {
     const prompt = `
@@ -92,10 +91,11 @@ async function classifyScoresRank(articleList: any[]): Promise<any[]> {
     });
 
     // 添加分数 >= 9 的文章
-    orderArticle.push(...scoreGeq9.slice(0, LIMIT_SEND_COUNT));
-
+    orderArticle.push(...scoreGeq9);
     // 如果已添加的文章达到限制，直接返回
     if (orderArticle.length >= LIMIT_SEND_COUNT) {
+        orderArticle.push(...scoreEq8);
+        orderArticle.push(...scoreLeq7);
         return orderArticle;
     }
 
@@ -109,12 +109,11 @@ async function classifyScoresRank(articleList: any[]): Promise<any[]> {
                 continue;
             }
             const targetPost = scoreEq8[idx];
-            if (orderArticle.length < LIMIT_SEND_COUNT) {
-                orderArticle.push(targetPost);
-            }
+            orderArticle.push(targetPost);
+            orderArticle.push(...scoreLeq7);
         }
     } else {
-        orderArticle.push(...scoreEq8.slice(LIMIT_SEND_COUNT - scoreGeq9.length, LIMIT_SEND_COUNT));
+        orderArticle.push(...scoreEq8);
         const scoreLeq7Rank = scoreLeq7.map((item, idx) => ({ index: idx, title: item.title, summary: item.article_abstract }));
         const llmRankList = await rankArticles(JSON.stringify(scoreLeq7Rank, null, 2));
         for (const idx of llmRankList?.orders ?? []) {
@@ -123,9 +122,7 @@ async function classifyScoresRank(articleList: any[]): Promise<any[]> {
                 continue;
             }
             const targetPost = scoreLeq7[idx];
-            if (orderArticle.length < LIMIT_SEND_COUNT) {
-                orderArticle.push(targetPost);
-            }
+            orderArticle.push(targetPost);
         }
     }
 

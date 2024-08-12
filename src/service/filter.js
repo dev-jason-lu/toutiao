@@ -11,8 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.filterBlogs = filterBlogs;
 exports.llmFilter = llmFilter;
-const article_1 = require("./database/models/article");
-const llm_1 = require("./llm");
+const article_1 = require("../database/models/article");
+const llm_1 = require("../llm");
 const CONTNET_LIMIT = 500; // 文章内容过短，有时候也可以判定为是抓取失效得到的一些错误信息，也可以过滤一下
 function filterBlogs(blogs) {
     return __awaiter(this, void 0, void 0, function* () {

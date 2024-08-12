@@ -13,17 +13,17 @@ interface Article {
 }
 
 // 创建文章
-async function createArticle(article: Omit<Article, 'id' | 'created_time'>): Promise<number | null> {
+async function createArticle(article: Omit<Article, 'id' | 'created_time'>): Promise<number> {
   const { title, article_link, article_abstract, article_content, tags, score, is_send } = article;
 
   // 使用 ON CONFLICT 子句处理唯一性冲突
   const result = await pool.query(
-    'INSERT INTO articles (title, article_link, article_abstract, article_content, tags, score, is_send) VALUES ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT (article_link) DO NOTHING RETURNING id',
-    [title, article_link, article_abstract, article_content, tags, score, is_send]
+  'INSERT INTO articles (title, article_link, article_abstract, article_content, tags, score, is_send) VALUES ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT (article_link) DO UPDATE SET is_send = EXCLUDED.is_send RETURNING id',
+  [title, article_link, article_abstract, article_content, tags, score, is_send]
   );
 
   // 如果插入成功，则返回新插入的记录的 id，否则返回 null
-  return result.rows.length > 0 ? result.rows[0].id : null;
+  return result.rows[0].id
 }
 
 // 查询文章

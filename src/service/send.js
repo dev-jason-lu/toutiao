@@ -48,8 +48,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sendAndStoreMessages = sendAndStoreMessages;
-var feishu_1 = require("./utils/feishu");
-var article_1 = require("./database/models/article");
+var feishu_1 = require("../utils/feishu");
+var article_1 = require("../database/models/article");
 var colorList = ['blue', 'turquoise', 'lime', 'orange', 'violet', 'indigo', 'wathet', 'green', 'yellow', 'red', 'purple', 'carmine'];
 // 从上述列表里去一个颜色字符串作为return，且每次生成不能重复
 function getColorBySet(index) {
@@ -188,10 +188,3 @@ function sendAndStoreMessages(rankList, abstractList, linkSet) {
         });
     });
 }
-// 示例使用
-var dataList = [
-    { title: "Title 1", article_abstract: "Content 1", tags: ["tag1", "tag2"] },
-    { title: "Title 2", article_abstract: "Content 2", tags: ["tag3", "tag4"] }
-];
-var formattedMessage = formatMissionJsonSave(dataList);
-console.log("Formatted Message:", formattedMessage);
