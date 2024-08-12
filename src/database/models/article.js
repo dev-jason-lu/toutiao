@@ -51,11 +51,11 @@ function createArticle(article) {
             switch (_a.label) {
                 case 0:
                     title = article.title, article_link = article.article_link, article_abstract = article.article_abstract, article_content = article.article_content, tags = article.tags, score = article.score, is_send = article.is_send;
-                    return [4 /*yield*/, db_1.default.query('INSERT INTO articles (title, article_link, article_abstract, article_content, tags, score, is_send) VALUES ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT (article_link) DO NOTHING RETURNING id', [title, article_link, article_abstract, article_content, tags, score, is_send])];
+                    return [4 /*yield*/, db_1.default.query('INSERT INTO articles (title, article_link, article_abstract, article_content, tags, score, is_send) VALUES ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT (article_link) DO UPDATE SET is_send = EXCLUDED.is_send RETURNING id', [title, article_link, article_abstract, article_content, tags, score, is_send])];
                 case 1:
                     result = _a.sent();
                     // 如果插入成功，则返回新插入的记录的 id，否则返回 null
-                    return [2 /*return*/, result.rows.length > 0 ? result.rows[0].id : null];
+                    return [2 /*return*/, result.rows[0].id];
             }
         });
     });

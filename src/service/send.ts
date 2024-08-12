@@ -54,6 +54,7 @@ async function formatMissionJsonSave(dataList: any[]): Promise<any> {
     const title = item.title || ""; // 直接访问属性
     const content = item.article_abstract || "";
     const link = item.article_link || "";
+    const id = item.id || 0;
     const tagList = item.tags || [];
 
     const cardTitle: MissionElement = {
@@ -99,12 +100,14 @@ async function formatMissionJsonSave(dataList: any[]): Promise<any> {
                 "complex_interaction": true,
                 "width": "default",
                 "size": "medium",
+                "value": id,
                 "multi_url": {
                     "url": link,
                     "pc_url": link,
                     "ios_url": link,
                     "android_url": link,
-                }
+                },
+                "action_type": "multi",
             }
         ]
     }

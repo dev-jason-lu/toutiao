@@ -1,13 +1,14 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import {SourceList} from "./config";
-import TurndownService from 'turndown';
+import * as TurndownService from 'turndown';
 const turndownService = new TurndownService();
 import {filterBlogs, llmFilter} from "./service/filter";
 import {getArticleAbstract} from "./service/abstract";
 import {createArticle, getArticleList} from "./database/models/article";
 import {classifyScoresRank} from "./service/rank";
 import {sendAndStoreMessages} from "./service/send";
+import {insertClick} from "./service/click";
 
 async function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -124,16 +125,44 @@ async function processContent(demoWebsite: any) {
 }
 
 // 入口函数
+// {
+//     "triggerTime": "2018-02-09T05:49:00Z",
+//     "triggerName": "my_trigger",
+//     "payload": "awesome-fc"
+// }
 export async function handler(event: any, context: any) {
     console.log("receive event: \n" + event.toString());
-    const demoWebsite = SourceList()[0]!;
-    await processContent(demoWebsite);
+    const eventObj = JSON.parse(event);
+    if (eventObj.triggerName === 'trigger-911a94b5') {
+        const demoWebsite = SourceList()[0]!;
+        await processContent(demoWebsite);
+        return {code: 0, msg: 'success'}
+    }
+    const req = JSON.parse(event);
+      if (req.body) {
+        const body = JSON.parse(req.body);
+        if (body.challenge) {
+          return {challenge: body.challenge}
+        }
+        if (body.event) {
+          if (body.header.event_type === "card.action.trigger") {
+            const user_id = body.event.operator.user_id;
+            const article_id = body.event.action.value;
+            const result = await insertClick(Number(article_id), user_id);
+            if (!result) {
+                return {code: 1, msg: 'insertClick Fail'}
+            }
+            return {}
+          }
+          return {event: body.event}
+        }
+      }
+    return JSON.parse(event);
 }
 
 // 立即执行的异步函数
 // (async  () => {
-//     const demoWebsite = SourceList()[0]!;
-//     await processContent(demoWebsite);
+//     await handler('{}', '')
 // })();
 
 // const filePath = './output.md';

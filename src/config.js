@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SourceList = void 0;
-const SourceList = () => {
+exports.SourceList = exports.LIMIT_SEND_COUNT = void 0;
+exports.LIMIT_SEND_COUNT = 5;
+var SourceList = function () {
     return [
         {
             source: "csdn",
