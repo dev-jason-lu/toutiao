@@ -22,9 +22,9 @@ const db_1 = __importDefault(require("../db")); // 引入数据库连接池
 // 创建文章
 function createArticle(article) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { title, article_link, article_abstract, article_content, tag, score, is_send } = article;
+        const { title, article_link, article_abstract, article_content, tags, score, is_send } = article;
         // 使用 ON CONFLICT 子句处理唯一性冲突
-        const result = yield db_1.default.query('INSERT INTO articles (title, article_link, article_abstract, article_content, tag, score, is_send) VALUES ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT (article_link) DO NOTHING RETURNING id', [title, article_link, article_abstract, article_content, tag, score, is_send]);
+        const result = yield db_1.default.query('INSERT INTO articles (title, article_link, article_abstract, article_content, tags, score, is_send) VALUES ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT (article_link) DO NOTHING RETURNING id', [title, article_link, article_abstract, article_content, tags, score, is_send]);
         // 如果插入成功，则返回新插入的记录的 id，否则返回 null
         return result.rows.length > 0 ? result.rows[0].id : null;
     });
@@ -46,7 +46,7 @@ function getArticleList(score) {
 // 更新文章
 function updateArticle(id, updates) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { title, article_link, article_abstract, article_content, tag, score, is_send } = updates;
+        const { title, article_link, article_abstract, article_content, tags, score, is_send } = updates;
         let query = 'UPDATE articles SET ';
         const values = [];
         let setClause = '';
@@ -66,9 +66,9 @@ function updateArticle(id, updates) {
             setClause += 'article_content = $4, ';
             values.push(article_content);
         }
-        if (tag !== undefined) {
-            setClause += 'tag = $5, ';
-            values.push(tag);
+        if (tags !== undefined) {
+            setClause += 'tags = $5, ';
+            values.push(tags);
         }
         if (score !== undefined) {
             setClause += 'score = $6, ';

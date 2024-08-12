@@ -40,7 +40,7 @@ async function getArticleList(score: number): Promise<Article[] | any[]> {
 
 // 更新文章
 async function updateArticle(id: number, updates: Partial<Omit<Article, 'id' | 'created_time'>>): Promise<void> {
-  const { title, article_link, article_abstract, article_content, tag, score, is_send } = updates;
+  const { title, article_link, article_abstract, article_content, tags, score, is_send } = updates;
   let query = 'UPDATE articles SET ';
   const values = [];
 
@@ -61,9 +61,9 @@ async function updateArticle(id: number, updates: Partial<Omit<Article, 'id' | '
     setClause += 'article_content = $4, ';
     values.push(article_content);
   }
-  if (tag !== undefined) {
-    setClause += 'tag = $5, ';
-    values.push(tag);
+  if (tags !== undefined) {
+    setClause += 'tags = $5, ';
+    values.push(tags);
   }
   if (score !== undefined) {
     setClause += 'score = $6, ';
