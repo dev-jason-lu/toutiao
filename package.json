@@ -6,6 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
+    "pre": "tsc index.ts",
     "dev": "node index.js"
   },
   "devDependencies": {

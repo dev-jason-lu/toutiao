@@ -145,9 +145,9 @@ export async function handler(event: any, context: any) {
         }
         if (body.event) {
           if (body.header.event_type === "card.action.trigger") {
-            const user_id = body.event.operator.user_id;
+            const open_id = body.event.operator.open_id;
             const article_id = body.event.action.value;
-            const result = await insertClick(Number(article_id), user_id);
+            const result = await insertClick(Number(article_id), open_id);
             if (!result) {
                 return {code: 1, msg: 'insertClick Fail'}
             }

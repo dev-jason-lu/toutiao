@@ -122,8 +122,8 @@ async function formatMissionJsonSave(dataList: any[]): Promise<any> {
 
   const sendMessage: SendMissionMessage = {
     content: JSON.stringify(message),
-    // receive_id: "oc_40e0a283cf0624bb9a365dcf94bdbbe0",
-    receive_id: "oc_dddeabc7ccbff0504b46d72a51d2920d",
+    receive_id: "oc_40e0a283cf0624bb9a365dcf94bdbbe0",
+    // receive_id: "oc_dddeabc7ccbff0504b46d72a51d2920d",
     msg_type: "interactive"
   };
   return await simpleSendGroup(sendMessage);

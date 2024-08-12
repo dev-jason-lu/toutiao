@@ -42,14 +42,14 @@ exports.updateClickRecord = updateClickRecord;
 exports.getClickRecords = getClickRecords;
 // 插入一条点击记录
 var db_1 = require("../db");
-function insertClickRecord(article_id, user_id) {
+function insertClickRecord(article_id, open_id) {
     return __awaiter(this, void 0, void 0, function () {
         var queryText, rows;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    queryText = "\n    INSERT INTO article_clicks (article_id, user_id)\n    VALUES ($1, $2)\n    RETURNING click_id\n  ";
-                    return [4 /*yield*/, db_1.default.query(queryText, [article_id, user_id])];
+                    queryText = "\n    INSERT INTO article_clicks (article_id, open_id)\n    VALUES ($1, $2)\n    RETURNING click_id\n  ";
+                    return [4 /*yield*/, db_1.default.query(queryText, [article_id, open_id])];
                 case 1:
                     rows = (_a.sent()).rows;
                     return [2 /*return*/, rows[0].click_id];
