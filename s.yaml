@@ -15,5 +15,5 @@ resources:
       runtime: "nodejs20"
       code: ./
       handler: index.handler
-      memorySize: 128
-      timeout: 30
+      memorySize: 2048
+      timeout: 300
