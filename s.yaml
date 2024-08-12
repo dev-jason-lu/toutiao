@@ -1,0 +1,19 @@
+edition: 3.0.0
+name: fcDeployApp
+access: "default"
+
+vars: # 全局变量
+  region: "cn-hangzhou"
+
+resources:
+  hello_world:
+    component: fc3 # 组件名称
+    props:
+      region: ${vars.region}              # 关于变量的使用方法，可以参考：https://docs.serverless-devs.com/serverless-devs/yaml#%E5%8F%98%E9%87%8F%E8%B5%8B%E5%80%BC
+      functionName: "web-toutiao"
+      description: 'this is web-toutiao'
+      runtime: "nodejs20"
+      code: ./
+      handler: index.handler
+      memorySize: 2048
+      timeout: 300
