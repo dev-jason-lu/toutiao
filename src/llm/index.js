@@ -104,7 +104,6 @@ function getFilterScore(title, content) {
         try {
             const response = yield (0, axios_1.default)(config);
             const jsonParse = response.data.choices[0].message.content.trim().replace(/^```json/, '').replace(/```$/, '');
-            console.log(response.data.choices[0].message.content.trim().replace(/^```json/, '').replace(/```$/, ''));
             return JSON.parse(jsonParse);
         }
         catch (error) {
@@ -199,7 +198,6 @@ function llmRankArticles(prompt) {
         try {
             const response = yield (0, axios_1.default)(config);
             const jsonParse = response.data.choices[0].message.content.trim().replace(/^```json/, '').replace(/```$/, '');
-            console.log(response.data.choices[0].message.content.trim().replace(/^```json/, '').replace(/```$/, ''));
             return JSON.parse(jsonParse);
         }
         catch (error) {

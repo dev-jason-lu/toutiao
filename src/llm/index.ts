@@ -156,7 +156,6 @@ async function getFilterScore(title: string, content: string): Promise<Response>
   try {
     const response: AxiosResponse<ChatCompletionResponse> = await axios(config);
     const jsonParse = response.data.choices[0].message.content.trim().replace(/^```json/, '').replace(/```$/, '')
-    console.log(response.data.choices[0].message.content.trim().replace(/^```json/, '').replace(/```$/, ''))
     return JSON.parse(jsonParse);
   } catch (error) {
     console.log('llm req fail')
@@ -251,7 +250,6 @@ async function llmRankArticles(prompt: string): Promise<ResponseRank> {
   try {
     const response: AxiosResponse<ChatCompletionResponse> = await axios(config);
     const jsonParse = response.data.choices[0].message.content.trim().replace(/^```json/, '').replace(/```$/, '')
-    console.log(response.data.choices[0].message.content.trim().replace(/^```json/, '').replace(/```$/, ''))
     return JSON.parse(jsonParse);
   } catch (error) {
     console.log('llm req fail')
