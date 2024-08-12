@@ -5,7 +5,6 @@ import * as TurndownService from 'turndown';
 const turndownService = new TurndownService();
 import {filterBlogs, llmFilter} from "./service/filter";
 import {getArticleAbstract} from "./service/abstract";
-import {createArticle, getArticleList} from "./database/models/article";
 import {classifyScoresRank} from "./service/rank";
 import {sendAndStoreMessages} from "./service/send";
 import {insertClick} from "./service/click";
