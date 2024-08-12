@@ -100,14 +100,20 @@ async function formatMissionJsonSave(dataList: any[]): Promise<any> {
                 "complex_interaction": true,
                 "width": "default",
                 "size": "medium",
-                "value": id,
-                "multi_url": {
-                    "url": link,
-                    "pc_url": link,
-                    "ios_url": link,
-                    "android_url": link,
-                },
-                "action_type": "multi",
+                "behaviors": [
+                  { // 声明交互类型是回传数据到服务端的回传交互。
+                    "type": "callback",
+                    "value": id,
+                  },
+                  {
+                    "type": "open_url", // 声明交互类型是打开链接的交互。
+                    "default_url": link, // 兜底的跳转地址。
+                    "android_url": link, // 安卓端跳转地址。可配置为 `lark://msgcard/unsupported_action` 声明当前端不允许跳转。
+                    "ios_url": link, // iOS 端跳转地址。可配置为 `lark://msgcard/unsupported_action` 声明当前端不允许跳转。
+                    "pc_url": link // 桌面端跳转地址。可配置为 `lark://msgcard/unsupported_action` 声明当前端不允许跳转。
+                  }
+                ]
+
             }
         ]
     }
