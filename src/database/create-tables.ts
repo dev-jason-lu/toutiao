@@ -13,4 +13,4 @@ async function createTables() {
   }
 }
 
-createTables();
+// createTables();
