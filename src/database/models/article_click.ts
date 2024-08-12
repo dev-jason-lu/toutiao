@@ -1,13 +1,13 @@
 // 插入一条点击记录
 import pool from "../db";
 
-async function insertClickRecord(article_id: number, user_id: string): Promise<number> {
+async function insertClickRecord(article_id: number, open_id: string): Promise<number> {
   const queryText = `
-    INSERT INTO article_clicks (article_id, user_id)
+    INSERT INTO article_clicks (article_id, open_id)
     VALUES ($1, $2)
     RETURNING click_id
   `;
-  const { rows } = await pool.query(queryText, [article_id, user_id]);
+  const { rows } = await pool.query(queryText, [article_id, open_id]);
   return rows[0].click_id;
 }
 
