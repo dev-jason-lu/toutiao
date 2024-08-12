@@ -220,7 +220,7 @@ function processContent(demoWebsite) {
 // }
 function handler(event, context) {
     return __awaiter(this, void 0, void 0, function () {
-        var eventObj, demoWebsite, req, body, user_id, article_id, result;
+        var eventObj, demoWebsite, req, body, open_id, article_id, result;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -241,9 +241,9 @@ function handler(event, context) {
                     }
                     if (!body.event) return [3 /*break*/, 5];
                     if (!(body.header.event_type === "card.action.trigger")) return [3 /*break*/, 4];
-                    user_id = body.event.operator.user_id;
+                    open_id = body.event.operator.open_id;
                     article_id = body.event.action.value;
-                    return [4 /*yield*/, (0, click_1.insertClick)(Number(article_id), user_id)];
+                    return [4 /*yield*/, (0, click_1.insertClick)(Number(article_id), open_id)];
                 case 3:
                     result = _a.sent();
                     if (!result) {

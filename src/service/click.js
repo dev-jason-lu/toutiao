@@ -38,11 +38,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.insertClick = insertClick;
 var article_click_1 = require("../database/models/article_click");
-function insertClick(article_id, user_id) {
+function insertClick(article_id, open_id) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, (0, article_click_1.insertClickRecord)(article_id, user_id)];
+                case 0: return [4 /*yield*/, (0, article_click_1.insertClickRecord)(article_id, open_id)];
                 case 1: return [2 /*return*/, _a.sent()];
             }
         });
