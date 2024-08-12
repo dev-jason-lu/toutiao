@@ -1,13 +1,13 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import {SourceList} from "./config";
+import {SourceList} from "./src/config";
 import * as TurndownService from 'turndown';
 const turndownService = new TurndownService();
-import {filterBlogs, llmFilter} from "./service/filter";
-import {getArticleAbstract} from "./service/abstract";
-import {classifyScoresRank} from "./service/rank";
-import {sendAndStoreMessages} from "./service/send";
-import {insertClick} from "./service/click";
+import {filterBlogs, llmFilter} from "./src/service/filter";
+import {getArticleAbstract} from "./src/service/abstract";
+import {classifyScoresRank} from "./src/service/rank";
+import {sendAndStoreMessages} from "./src/service/send";
+import {insertClick} from "./src/service/click";
 
 async function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));

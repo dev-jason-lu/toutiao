@@ -50,14 +50,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.handler = handler;
 var axios_1 = require("axios");
 var cheerio = require("cheerio");
-var config_1 = require("./config");
+var config_1 = require("./src/config");
 var TurndownService = require("turndown");
 var turndownService = new TurndownService();
-var filter_1 = require("./service/filter");
-var abstract_1 = require("./service/abstract");
-var rank_1 = require("./service/rank");
-var send_1 = require("./service/send");
-var click_1 = require("./service/click");
+var filter_1 = require("./src/service/filter");
+var abstract_1 = require("./src/service/abstract");
+var rank_1 = require("./src/service/rank");
+var send_1 = require("./src/service/send");
+var click_1 = require("./src/service/click");
 function sleep(ms) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
