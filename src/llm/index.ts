@@ -1,4 +1,8 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import dotenv from 'dotenv';
+
+// 加载环境变量配置
+dotenv.config();
 
 // Define the types for the payload
 interface ChatMessage {
@@ -67,7 +71,33 @@ interface ChatCompletionResponse {
   system_fingerprint: string;
 }
 
-// Define the API call function
+/**
+ * 从环境变量获取DeepSeek API密钥
+ * @returns {string} API密钥，如果未配置则抛出错误
+ */
+function getDeepSeekApiKey(): string {
+  const apiKey = process.env.DEEPSEEK_API_KEY;
+  if (!apiKey) {
+    throw new Error('DEEPSEEK_API_KEY 环境变量未配置，请在 .env 文件中设置');
+  }
+  return apiKey;
+}
+
+/**
+ * 获取文章过滤评分
+ * 
+ * 使用DeepSeek API对文章进行智能评分，基于以下标准：
+ * - 内容准确性和深度
+ * - 原创性和创新性
+ * - 逻辑性和条理性
+ * - 语言质量和可读性
+ * - 实用性和技术价值
+ * 
+ * @param title - 文章标题
+ * @param content - 文章内容
+ * @returns 返回评分结果，包含思考过程、标签和分数
+ * @throws 当API调用失败时返回默认的失败响应
+ */
 async function getFilterScore(title: string, content: string): Promise<Response> {
   const prompt = `
 # Task
@@ -148,7 +178,7 @@ async function getFilterScore(title: string, content: string): Promise<Response>
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer sk-48781df778c74ed59c43339195ae7487',
+      'Authorization': `Bearer ${getDeepSeekApiKey()}`,
     },
     data,
   };
@@ -158,9 +188,10 @@ async function getFilterScore(title: string, content: string): Promise<Response>
     const jsonParse = response.data.choices[0].message.content.trim().replace(/^```json/, '').replace(/```$/, '')
     return JSON.parse(jsonParse);
   } catch (error) {
-    console.log('llm req fail')
+    console.error('获取文章过滤评分失败:', error);
+    // 返回默认的失败响应，确保函数始终有返回值
     const resp: Response = {
-        think: '',
+        think: 'API调用失败，无法评估文章质量',
         tags: [],
         score: 0,
     }
@@ -168,6 +199,16 @@ async function getFilterScore(title: string, content: string): Promise<Response>
   }
 }
 
+/**
+ * 生成文章摘要
+ * 
+ * 使用DeepSeek API对文章内容进行智能摘要，生成简洁明了的摘要信息，
+ * 帮助读者快速了解文章内容和价值。
+ * 
+ * @param prompt - 文章内容提示
+ * @returns 返回文章摘要字符串
+ * @throws 当API调用失败时抛出错误
+ */
 async function llmArticleAbstract(prompt: string): Promise<string> {
   const req: ChatCompletionRequest = {
     model: 'deepseek-chat',
@@ -198,7 +239,7 @@ async function llmArticleAbstract(prompt: string): Promise<string> {
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer sk-48781df778c74ed59c43339195ae7487',
+      'Authorization': `Bearer ${getDeepSeekApiKey()}`,
     },
     data,
   };
@@ -207,11 +248,22 @@ async function llmArticleAbstract(prompt: string): Promise<string> {
     const response: AxiosResponse<ChatCompletionResponse> = await axios(config);
     return response.data.choices[0].message.content.trim();
   } catch (error) {
-    console.error(error);
-    throw error; // Or handle the error as needed
+    console.error('生成文章摘要失败:', error);
+    // 抛出错误让调用方处理，或者返回默认摘要
+    throw new Error(`生成文章摘要失败: ${error instanceof Error ? error.message : '未知错误'}`);
   }
 }
 
+/**
+ * 文章排序
+ * 
+ * 使用DeepSeek API对文章进行智能排序，根据文章质量和相关性
+ * 为文章提供排序建议。
+ * 
+ * @param prompt - 排序提示信息
+ * @returns 返回排序结果，包含思考过程和排序顺序
+ * @throws 当API调用失败时返回默认的失败响应
+ */
 async function llmRankArticles(prompt: string): Promise<ResponseRank> {
   const req: ChatCompletionRequest = {
     model: 'deepseek-chat',
@@ -242,7 +294,7 @@ async function llmRankArticles(prompt: string): Promise<ResponseRank> {
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer sk-48781df778c74ed59c43339195ae7487',
+      'Authorization': `Bearer ${getDeepSeekApiKey()}`,
     },
     data,
   };
@@ -252,9 +304,10 @@ async function llmRankArticles(prompt: string): Promise<ResponseRank> {
     const jsonParse = response.data.choices[0].message.content.trim().replace(/^```json/, '').replace(/```$/, '')
     return JSON.parse(jsonParse);
   } catch (error) {
-    console.log('llm req fail')
+    console.error('文章排序失败:', error);
+    // 返回默认的失败响应，确保函数始终有返回值
     const resp: ResponseRank = {
-      think: '',
+      think: 'API调用失败，无法对文章进行排序',
       orders: [],
     }
     return resp;
@@ -262,10 +315,3 @@ async function llmRankArticles(prompt: string): Promise<ResponseRank> {
 }
 
 export {getFilterScore, llmArticleAbstract, llmRankArticles};
-// Example usage
-// (async () => {
-//   const title = 'JavaScript 中的闭包';
-//   const content = '在 JavaScript 中，闭包是一种常见的编程模式……'; // Provide actual article content here
-//   const response = await getFilterScore(title, content);
-//   console.log(response.choices[0].message.content); // Print the assistant's message
-// })();

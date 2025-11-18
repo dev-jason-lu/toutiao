@@ -9,14 +9,36 @@ import {classifyScoresRank} from "./src/service/rank";
 import {sendAndStoreMessages} from "./src/service/send";
 import {insertClick} from "./src/service/click";
 
-async function sleep(ms: number) {
+/**
+ * 延迟执行函数
+ * 
+ * 用于在异步操作之间添加延迟，避免请求过于频繁。
+ * 
+ * @param ms - 延迟时间（毫秒）
+ * @returns {Promise<void>} 延迟完成后resolve的Promise
+ */
+async function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
-// @ts-nocheck
-async function scrapePage(website: any) {
+/**
+ * 爬取网页文章列表
+ * 
+ * 从指定的网站爬取文章列表，提取文章标题和链接。
+ * 会自动清理HTML中的不必要标签，根据配置的选择器提取信息。
+ * 
+ * @param website - 网站配置对象，包含源链接、选择器等信息
+ * @returns {Promise<Array<{title: string, article_link: string}>>} 返回文章列表数组
+ * @throws 当网络请求失败或HTML解析失败时抛出错误
+ */
+async function scrapePage(website: any): Promise<Array<{title: string, article_link: string | undefined}>> {
     console.log("current website is ", website.source);
     await sleep(1000);
     const response = await axios.get(website.source_link); // 获得 html
+    
+    // 验证响应数据
+    if (!response.data) {
+      throw new Error(`获取网页内容失败：${website.source_link} 返回空数据`);
+    }
     const $ = cheerio.load(response.data as string);
 
     // 移除不必要的 tag 信息
