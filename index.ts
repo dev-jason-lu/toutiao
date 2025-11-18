@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import {SourceList} from "./src/config";
-import * as TurndownService from 'turndown';
+import TurndownService from 'turndown';
 const turndownService = new TurndownService();
 import {filterBlogs, llmFilter} from "./src/service/filter";
 import {getArticleAbstract} from "./src/service/abstract";
