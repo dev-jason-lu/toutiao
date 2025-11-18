@@ -68,15 +68,15 @@ function createPool(): Pool {
     });
 
     // 监听连接池事件
-    pool.on('connect', (client) => {
+    pool.on('connect', (client: any) => {
       console.log('数据库连接已建立:', client.processID);
     });
 
-    pool.on('error', (err) => {
+    pool.on('error', (err: any) => {
       console.error('数据库连接池错误:', err);
     });
 
-    pool.on('remove', (client) => {
+    pool.on('remove', (client: any) => {
       console.log('数据库连接已移除:', client.processID);
     });
 
@@ -126,4 +126,3 @@ const pool = createPool();
 
 // 导出连接池和相关函数
 export default pool;
-export { testConnection, closePool };
