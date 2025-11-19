@@ -4,10 +4,17 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "npx tsc",
+    "build": "tsc",
+    "pre": "tsc",
+    "deploy": "npm run pre && s deploy -y",
     "start": "node dist/index.js",
-    "pre": "npx tsc",
-    "dev": "node dist/index.js"
+    "dev": "tsc -w & nodemon dist/index.js",
+    "process": "node dist/index.js",
+    "test": "echo \"No tests specified\" && exit 0",
+    "test:feishu": "node -e \"require('./dist/utils/feishu.js').testFeishuConnection()\"",
+    "test:llm": "echo \"LLM API test not implemented\" && exit 0",
+    "logs": "echo \"View logs in cloud console\" && exit 0",
+    "logs:error": "echo \"View error logs in cloud console\" && exit 0"
   },
   "devDependencies": {
     "@types/pg": "^8.11.6",

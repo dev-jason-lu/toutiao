@@ -12,12 +12,13 @@
 ## 📋 目录
 
 1. [项目概述](#项目概述)
-2. [系统架构](#系统架构)
-3. [核心流程](#核心流程)
-4. [模块详解](#模块详解)
-5. [数据模型](#数据模型)
-6. [部署架构](#部署架构)
-7. [扩展功能规划](#扩展功能规划)
+2. [快速开始](#快速开始)
+3. [系统架构](#系统架构)
+4. [核心流程](#核心流程)
+5. [模块详解](#模块详解)
+6. [数据模型](#数据模型)
+7. [部署架构](#部署架构)
+8. [扩展功能规划](#扩展功能规划)
 
 ---
 
@@ -38,6 +39,117 @@
 - **内容质量控制**：多层次过滤机制确保推送的都是优质内容
 - **用户体验优化**：精简摘要+交互式卡片提升阅读体验
 - **数据驱动**：用户交互数据为后续优化提供依据
+
+---
+
+## 快速开始
+
+### 🚀 环境要求
+
+- **Node.js**: v18.0.0 或更高版本
+- **npm**: v8.0.0 或更高版本
+- **PostgreSQL**: v12.0 或更高版本（可选，本地开发）
+
+### 📦 安装依赖
+
+```bash
+# 克隆项目
+git clone <项目地址>
+cd toutiao
+
+# 安装依赖
+npm install
+
+# 编译TypeScript
+npm run build
+```
+
+### ⚙️ 环境配置
+
+1. **创建环境变量文件**
+```bash
+cp .env.example .env
+```
+
+2. **配置必要的环境变量**
+```bash
+# DeepSeek API配置
+DEEPSEEK_API_KEY=your_deepseek_api_key_here
+DEEPSEEK_API_URL=https://api.deepseek.com/v1
+
+# 飞书应用配置
+FEISHU_APP_ID=your_feishu_app_id
+FEISHU_APP_SECRET=your_feishu_app_secret
+FEISHU_RECEIVE_ID=your_feishu_group_receive_id
+
+# 数据库配置（可选）
+DATABASE_URL=postgresql://user:password@localhost:5432/toutiao
+```
+
+### 🏃‍♂️ 本地运行
+
+```bash
+# 开发模式（带热重载）
+npm run dev
+
+# 生产模式
+npm start
+
+# 手动触发文章处理
+npm run process
+```
+
+### 🧪 测试运行
+
+```bash
+# 测试飞书连接
+npm run test:feishu
+
+# 测试DeepSeek API
+npm run test:llm
+
+# 运行所有测试
+npm test
+```
+
+### 📝 使用说明
+
+#### 1. **定时任务**（阿里云函数计算）
+- 系统默认每天上午11:00自动执行
+- 自动爬取、过滤、评分并推送前5篇高质量文章
+
+#### 2. **手动触发**
+```bash
+# 立即执行文章处理
+npm run process
+```
+
+#### 3. **飞书交互**
+- 收到推荐卡片后，点击文章链接会记录用户行为
+- 系统会根据点击数据优化后续推荐
+
+#### 4. **监控日志**
+```bash
+# 查看实时日志
+npm run logs
+
+# 查看错误日志
+npm run logs:error
+```
+
+### 🔧 常见问题
+
+#### Q: 飞书消息发送失败？
+A: 检查 `FEISHU_RECEIVE_ID` 是否正确，确保机器人在群组中
+
+#### Q: DeepSeek API调用失败？
+A: 检查API密钥是否有效，确认账户余额充足
+
+#### Q: 数据库连接失败？
+A: 确认数据库服务正常运行，连接字符串配置正确
+
+#### Q: 文章爬取失败？
+A: 检查目标网站是否更新，可能需要更新选择器配置
 
 ---
 
@@ -79,6 +191,17 @@
          │ • article_clicks 表              │
          └──────────────────────────────────┘
 ```
+
+### 2.3 环境变量配置
+
+| 变量名 | 必填 | 说明 | 示例 |
+|--------|------|------|------|
+| `DEEPSEEK_API_KEY` | ✅ | DeepSeek API密钥 | `sk-xxxxxxxxxx` |
+| `DEEPSEEK_API_URL` | ✅ | DeepSeek API地址 | `https://api.deepseek.com/v1` |
+| `FEISHU_APP_ID` | ✅ | 飞书应用ID | `cli_xxxxxxxxxx` |
+| `FEISHU_APP_SECRET` | ✅ | 飞书应用密钥 | `xxxxxxxxxx` |
+| `FEISHU_RECEIVE_ID` | ✅ | 飞书群组接收ID | `oc_xxxxxxxxxx` |
+| `DATABASE_URL` | ❌ | 数据库连接字符串 | `postgresql://user:pass@host:port/db` |
 
 ### 2.2 技术栈详情
 
